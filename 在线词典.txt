@@ -1,0 +1,92 @@
+在线词典
+
+在线词典
+1. 需求分析： C/S
+
+   使用流程图 见图
+
+2. 技术点分析
+
+   网络 ： tcp
+   并发 ： 多进程
+   存储 ： mysql数据库
+   二级界面切换 ： 见demo.py
+
+3. 模块划分
+
+   几个模块: 登录  注册   查单词  历史记录
+   封装结构: 类
+   模块结构 ： 客户端   服务端（逻辑，数据库）
+             MVC
+
+4. 数据库数据表设计
+
+   dict
+   words : id  word  mean
+   user :  id  user  passwd
+
+   create table user (
+   id int primary key auto_increment,
+   user varchar(30) not null,
+   passwd char(64) not null
+   );
+   alter table user modify user varchar(30) not null unique;
+
+
+   history : id  user_id  words_id   time
+
+   create table history (
+   id int primary key auto_increment,
+   user_id int,
+   words_id int,
+   time datetime default now(),
+   foreign key (user_id) references user(id),
+   foreign key (words_id) references words(id)
+   );
+
+
+   history : id  word   time  user_id
+
+5. 通信协议
+   请求
+               请求类型      数据参数
+     注册         R         用户名  密码
+     登录         L         用户名  密码
+     查单词       Q           单词
+     历史记录      H
+     退出         E
+
+   响应
+     注册：  成功 T     失败 F
+     登录：  成功 T     失败 F
+     查单词：  存在 T    不存在 F
+     历史记录:  有 T     空 F
+     退出： 无响应
+
+
+6. 具体功能细节逻辑
+
+   搭建框架模型
+
+   注册
+      客户端：填写注册信息
+             发送请求
+             接收响应
+             根据响应情况处理
+             T ： 注册成功
+             F ： 注册失败
+      服务端（逻辑、数据）：
+            接收请求，简单解析
+            判断是否可以注册
+            发送响应
+            T ： 用户信息存储
+            F ：
+
+   登录
+   退出
+
+   查单词 :  单词的响应组织
+            怎么让服务端知道是谁在查（历史记录）
+
+
+   历史记录
