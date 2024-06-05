@@ -16,8 +16,10 @@ class DictDB:
         self.kwargs = {
             "user": "root",
             "password": "123456",
+            "port": 33061,
             "database": "dict",
             "charset": "utf8"
+        
         }
         self.db = pymysql.connect(**self.kwargs)
         self.cur = self.db.cursor()

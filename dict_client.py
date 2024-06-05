@@ -17,6 +17,14 @@ class DictView:
     def __init__(self):
         self.controller = DictClientController()
 
+    def login(self, name, passwd):
+        msg = f"L\t{name}\t{passwd}"
+        self.__sock.send(msg.encode())
+        data = self.__sock.recv(1024)
+        if data == b"T":
+            return True
+        else:
+            return False
     def _menu_one(self):
         while True:
             print("""
@@ -26,7 +34,13 @@ class DictView:
             """)
             cmd = input("请输入选项:")
             if cmd == "1":
-                pass
+                name = input("请输入昵称:")
+                password = input("请输入密码:")
+                if self.controller.login(name,password):
+                    print("登陆成功")
+                    self. _menu_two()
+                else:
+                    print("登录失败")
             elif cmd == "2":
                 name = input("请输入昵称:")
                 password = input("请输入密码:")
