@@ -8,10 +8,22 @@
 @Date    ：2024/6/5 15:20
 字典客户端Controller层
 '''
+import re
 from socket import *
 
 
 class DictClientController:
+    @staticmethod
+    def _check(info):
+        """
+        正则匹配，判断注册的昵称和密码是否符合规范
+        :param info:
+        :return:
+        """
+        if re.findall(r"^\w{6,}$", info):
+            return True
+        return False
+
     def __init__(self):
         self.tcp = self._create_socket()
 
@@ -31,13 +43,13 @@ class DictClientController:
         :param password: 接受密码
         :return: True or False 布尔类型
         """
-        request = f"R\t{name}\t{password}"
-        self.tcp.send(request.encode())
-        response = self.tcp.recv(1024).decode()
-        if response == "T":
-            return True
-        else:
-            return False
+        if DictClientController._check(password):
+            request = f"R\t{name}\t{password}"
+            self.tcp.send(request.encode())
+            response = self.tcp.recv(1024).decode()
+            if response == "T":
+                return True
+        return False
 
     def exit(self):
         """
@@ -46,3 +58,39 @@ class DictClientController:
         """
         self.tcp.send(b"E")
         self.tcp.close()
+
+    def login(self, name, password):
+        """
+        登录模块
+        :param name: 接收昵称
+        :param password: 接受密码
+        :return: True or False 布尔类型
+        """
+
+        request = f"L\t{name}\t{password}"
+        self.tcp.send(request.encode())
+        response = self.tcp.recv(1024).decode()
+        if response == "T":
+            return True
+        return False
+
+    def query(self, word):
+        request = f"Q\t{word}"
+        self.tcp.send(request.encode())
+        response = self.tcp.recv(1024).decode()
+        response = response.split("\t")
+        if response[0] == "T":
+            return "%s : %s\n" % (word, response[1])
+        return False
+
+    def history(self):
+        request = b"H"
+        self.tcp.send(request)
+        response = self.tcp.recv(1024).decode()
+        response = response.split("\t", 1)
+        if response[0] == "T":
+            data = ''
+            for row in response[1].split(";"):
+                data += f"{row}\n"
+            return data
+        return False

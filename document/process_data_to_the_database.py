@@ -40,6 +40,10 @@ class Dict:
         return data
 
     def insert_word(self):
+        """
+        把数据插入到数据库words表中
+        :return:
+        """
         data = self.get_data()
         try:
             sql = "insert into words (word,mean) value (%s,%s)"

@@ -28,18 +28,18 @@ class DictView:
             if cmd == "1":
                 name = input("请输入昵称:")
                 password = input("请输入密码:")
-                if self.controller.login(name,password):
-                    print("登陆成功")
-                    self. _menu_two()
+                if self.controller.login(name, password):
+                    print("登录成功")
+                    self._menu_two()
                 else:
-                    print("登录失败")
+                    print("登录失败,账号或密码输入错误")
             elif cmd == "2":
                 name = input("请输入昵称:")
                 password = input("请输入密码:")
                 if self.controller.register(name, password):
                     print("注册成功")
                 else:
-                    print("注册失败")
+                    print("注册失败,账号已存在或密码需为大于6位数字字母下划线")
             elif cmd == "3":
                 self.controller.exit()
                 sys.exit("感谢使用本在线字典")
@@ -55,11 +55,23 @@ class DictView:
             """)
             cmd = input("请输入选项:")
             if cmd == "1":
-                pass
+                while True:
+                    word = input("请输入要查询的单词:")
+                    if not word or word == "##":
+                        break
+                    response = self.controller.query(word)
+                    if response:
+                        print(response)
+                    else:
+                        print("没有找到该单词！\n")
             elif cmd == "2":
-                pass
+                response = self.controller.history()
+                if response:
+                    print(response)
+                else:
+                    print("您还没查找记录哦！\n")
             elif cmd == "3":
-                pass
+                break
             else:
                 print("请输入正确的选项！")
 
