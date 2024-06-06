@@ -11,6 +11,8 @@
 import sys
 from socket import *
 from dict_client_controller import DictClientController
+
+
 class Sock:
     def __init__(self, host="127.0.0.1", port=8888):
         self.__host = host
@@ -22,58 +24,7 @@ class Sock:
         sock = socket()
         sock.connect(self.address)
         return sock
-class  DictClientController:
-    def __init__(self):
-        self.__sock = Sock().sock
 
-    def login(self, name, passwd):
-        msg = f"L\t{name}\t{passwd}"
-        self.__sock.send(msg.encode())
-        data = self.__sock.recv(1024)
-        if data == b"T":
-            return True
-        else:
-            return False
-
-    def register(self, name, passwd):
-        if " " in name or " " in passwd:
-            print("名字和密码里不能有空格")
-        msg = f"R\t{name}\t{passwd}"
-        self.__sock.send(msg.encode())
-        data = self.__sock.recv(10)
-        if data == b"T":
-            return True
-        else:
-            return False
-
-    def select(self):
-        while True:
-            word = input("Word:")
-            if word == "##":
-                break  
-            request = "Q\t" + word
-            self.__sock.send(request.encode())
-            response = self.__sock.recv(1024).decode()
-            tmp = response.split('\t', 1)
-            if tmp[0] == 'T':
-                print("%s : %s\n" % (word, tmp[1]))
-            else:
-                print("%s : Not Found!\n" % word)
-
-    def history(self):
-        self.__sock.send(b"H")
-        response = self.__sock.recv(1024 * 10).decode()
-        tmp = response.split("\t")
-        if tmp[0] == 'T':
-            for row in tmp[1].split(';'):
-                print(row)
-        else:
-            print("您当前还没有查询记录")
-
-    def exit(self):
-        self.__sock.send(b"E")
-        self.__sock.close()
-        sys.exit()
 
 class DictView:
     def __init__(self):
