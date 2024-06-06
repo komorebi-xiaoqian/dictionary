@@ -16,7 +16,7 @@ class DictDB:
         self.kwargs = {
             "user": "root",
             "password": "123456",
-            "port": 3306,
+            "port": 33061,
             "database": "dict",
             "charset": "utf8"
         
