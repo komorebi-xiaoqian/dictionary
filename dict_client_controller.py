@@ -109,3 +109,4 @@ class DictClientController:
                 data += f"{row}\n"
             return data
         return False
+
