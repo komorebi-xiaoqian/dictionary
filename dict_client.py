@@ -29,13 +29,15 @@ class DictView:
             """)
             cmd = input("请输入选项:")
             if cmd == "1":
-                name = input("请输入账号:")
-                password = input("请输入密码:")
-                if self.controller.login(name, password):
-                    print("登录成功")
-                    self._menu_two()
-                else:
-                    print("登录失败,账号或密码输入错误")
+                while True:
+                    name = input("请输入账号:")
+                    password = input("请输入密码:")
+                    if self.controller.login(name, password):
+                        print("登录成功")
+                        self._menu_two()
+                        break
+                    else:
+                        print("登录失败,账号或密码输入错误")
             elif cmd == "2":
                 name = input("请输入账号:")
                 password = input("请输入密码:")
