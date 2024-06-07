@@ -9,21 +9,7 @@
 字典客户端View层
 '''
 import sys
-from socket import *
 from dict_client_controller import DictClientController
-
-
-class Sock:
-    def __init__(self, host="127.0.0.1", port=8888):
-        self.__host = host
-        self.__port = port
-        self.address = (self.__host, self.__port)
-        self.sock = self.__create_sock()
-
-    def __create_sock(self):
-        sock = socket()
-        sock.connect(self.address)
-        return sock
 
 
 class DictView:
@@ -31,6 +17,10 @@ class DictView:
         self.controller = DictClientController()
 
     def _menu_one(self):
+        """
+        一级页面
+        :return:
+        """
         while True:
             print("""
             -----------欢迎使用本在线词典---------------
@@ -39,7 +29,7 @@ class DictView:
             """)
             cmd = input("请输入选项:")
             if cmd == "1":
-                name = input("请输入昵称:")
+                name = input("请输入账号:")
                 password = input("请输入密码:")
                 if self.controller.login(name, password):
                     print("登录成功")
@@ -47,7 +37,7 @@ class DictView:
                 else:
                     print("登录失败,账号或密码输入错误")
             elif cmd == "2":
-                name = input("请输入昵称:")
+                name = input("请输入账号:")
                 password = input("请输入密码:")
                 if self.controller.register(name, password):
                     print("注册成功")
@@ -60,6 +50,10 @@ class DictView:
                 print("请输入正确的选项！")
 
     def _menu_two(self):
+        """
+        二级页面
+        :return:
+        """
         while True:
             print("""
             -----------欢迎使用本在线词典---------------
@@ -89,6 +83,10 @@ class DictView:
                 print("请输入正确的选项！")
 
     def main(self):
+        """
+        调用一级页面，启动客户端
+        :return:
+        """
         self._menu_one()
 
 

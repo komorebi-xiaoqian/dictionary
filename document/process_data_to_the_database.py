@@ -63,6 +63,7 @@ class Dict:
         self.db.close()
 
 
+# ---------------测试入口----------------#
 if __name__ == '__main__':
     dict = Dict()
     dict.insert_word()

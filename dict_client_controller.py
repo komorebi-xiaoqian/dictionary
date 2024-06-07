@@ -20,11 +20,14 @@ class DictClientController:
         :param info:
         :return:
         """
-        if re.findall(r"^\w{6,}$", info):
+        if re.match("^[_0-9a-z]{6,16}$", info):
             return True
         return False
 
-    def __init__(self):
+    def __init__(self, host="127.0.0.1", port=8888):
+        self.__host = host
+        self.__port = port
+        self.address = (self.__host, self.__port)  # 服务器地址
         self.tcp = self._create_socket()
 
     def _create_socket(self):
@@ -33,13 +36,13 @@ class DictClientController:
         :return: tcp 套接字类型
         """
         tcp = socket()
-        tcp.connect(("127.0.0.1", 8888))  # 服务器地址
+        tcp.connect(self.address)
         return tcp
 
     def register(self, name, password):
         """
         注册模块
-        :param name: 接收昵称
+        :param name: 接收账号
         :param password: 接受密码
         :return: True or False 布尔类型
         """
@@ -62,7 +65,7 @@ class DictClientController:
     def login(self, name, password):
         """
         登录模块
-        :param name: 接收昵称
+        :param name: 接收账号
         :param password: 接受密码
         :return: True or False 布尔类型
         """
@@ -75,6 +78,11 @@ class DictClientController:
         return False
 
     def query(self, word):
+        """
+        查询单词模块，发送请求，有值，按照通信协议进行解析，通信协议为"T\tmean"
+        :param word: 用户输入的单词，str类型
+        :return: 查询结果 str类型，没有返回False
+        """
         request = f"Q\t{word}"
         self.tcp.send(request.encode())
         response = self.tcp.recv(1024).decode()
@@ -84,6 +92,10 @@ class DictClientController:
         return False
 
     def history(self):
+        """
+        发送请求，查询历史记录，有值，按照通信协议进行解析，通信协议为"T\tname,word,time;..."
+        :return: 查询结果 str类型，没有返回False
+        """
         request = b"H"
         self.tcp.send(request)
         response = self.tcp.recv(1024).decode()

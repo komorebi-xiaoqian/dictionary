@@ -8,11 +8,21 @@
 @Date    ：2024/6/5 16:07
 在线字典服务器端数据层，必要的数据支持
 '''
+import hashlib
+
 import pymysql
+
+
+# 密码加密 使用哈希算法加密(小测试，用处不大，可以使用其他加密算法)
+def change_passwd(passwd):
+    hash = hashlib.sha512()
+    hash.update(passwd.encode())
+    return hash.hexdigest()
 
 
 class DictDB:
     def __init__(self):
+        # 连接数据库
         self.kwargs = {
             "user": "root",
             "password": "123456",
@@ -25,6 +35,13 @@ class DictDB:
         self.cur = self.db.cursor()
 
     def register(self, name, password):
+        """
+        注册数据支持
+        :param name: 接收账户信息
+        :param password: 接收密码信息
+        :return: T or F bool类型
+        """
+        password = change_passwd(password)
         sql = "insert into user (name ,password) value (%s,%s);"
         try:
             self.cur.execute(sql, (name, password))
@@ -36,6 +53,13 @@ class DictDB:
             return False
 
     def login(self, name, password):
+        """
+        登录数据支持
+        :param name: 接收账户信息
+        :param password: 接收密码信息
+        :return: T or F bool类型
+        """
+        password = change_passwd(password)
         sql = "select id from user where name = %s and password = %s;"
         self.cur.execute(sql, (name, password))
         if self.cur.fetchone():
@@ -43,11 +67,22 @@ class DictDB:
         return False
 
     def query(self, word):
+        """
+        查单词数据支持
+        :param word: 用户输入的单词
+        :return: 查询结果 (mean,) or None
+        """
         sql = "select mean from words where word = %s;"
         self.cur.execute(sql, (word,))
         return self.cur.fetchone()
 
     def insert_history(self, name, word):
+        """
+        插入历史记录
+        :param name: 用户账号
+        :param word: 查询的单词
+        :return:
+        """
         sql = "select id from user where name=%s;"
         self.cur.execute(sql, (name,))
         user_id = self.cur.fetchone()[0]
@@ -59,6 +94,11 @@ class DictDB:
         self.db.commit()
 
     def history(self, name):
+        """
+        查询历史记录数据支持
+        :param name: 用户账号
+        :return: 查询结果 ((name,word,time),...) or None
+        """
         sql = """
                SELECT user.name, words.word, history.time
                FROM user
