@@ -15,7 +15,7 @@ import pymysql
 
 # 密码加密 使用哈希算法加密(小测试，用处不大，可以使用其他加密算法)
 def change_passwd(passwd):
-    hash = hashlib.sha512()
+    hash = hashlib.sha256()
     hash.update(passwd.encode())
     return hash.hexdigest()
 

@@ -39,10 +39,9 @@ class DictView:
             elif cmd == "2":
                 name = input("请输入账号:")
                 password = input("请输入密码:")
-                if self.controller.register(name, password):
-                    print("注册成功")
-                else:
-                    print("注册失败,账号已存在或密码需为大于6位数字字母下划线")
+                resource = self.controller.register(name, password)
+                print(resource)
+
             elif cmd == "3":
                 self.controller.exit()
                 sys.exit("感谢使用本在线字典")

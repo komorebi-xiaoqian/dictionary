@@ -51,8 +51,11 @@ class DictClientController:
             self.tcp.send(request.encode())
             response = self.tcp.recv(1024).decode()
             if response == "T":
-                return True
-        return False
+                return "注册成功"
+            else:
+                return "注册失败，当前账户已经存在"
+        else:
+            return "注册失败，密码需为大于6位数字字母下划线"
 
     def exit(self):
         """
